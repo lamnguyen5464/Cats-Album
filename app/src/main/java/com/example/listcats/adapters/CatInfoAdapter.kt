@@ -31,13 +31,18 @@ class CatInfoAdapter(
 //        if (convertView != null){
 //            Log.d("@@", convertView.findViewById<TextView>(R.id.txt_name).text.toString())
 //        }
+
         val currentList = listInfoViewModel?.catInfoRepo?.currentListCatInfo
+        val catInfo = currentList?.get(position)
+
+        if (convertView?.findViewById<TextView>(R.id.txt_name)?.text.toString() == catInfo?.name) {
+            return convertView
+        }
 
         if (position >= currentList?.size?.minus(1) ?: 0) {
             listInfoViewModel?.appendMoreItems()
         }
 
-        val catInfo = currentList?.get(position)
 
         val itemView = layoutInflater?.inflate(R.layout.item_cat_info, null)
         itemView?.findViewById<TextView>(R.id.txt_name)?.text =
