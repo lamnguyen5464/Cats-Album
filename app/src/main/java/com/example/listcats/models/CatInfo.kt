@@ -1,5 +1,5 @@
 package com.example.listcats.models
-import com.example.listcats.helpers.JsonHandler
+import com.example.listcats.helpers.JsonHelper
 import org.json.JSONObject
 
 class CatInfo() {
@@ -10,21 +10,20 @@ class CatInfo() {
     var width: Int? = null
     var height: Int? = null
 
-
     constructor(json: JSONObject?) : this() {
-        description = JsonHandler.getFieldSafely(json, CatInfoField.description)
-        name = JsonHandler.getFieldSafely(json, CatInfoField.name)
-        wikipedia_url = JsonHandler.getFieldSafely(json, CatInfoField.wikipedia_url)
+        description = JsonHelper.getFieldSafely(json, CatInfoField.description)
+        name = JsonHelper.getFieldSafely(json, CatInfoField.name)
+        wikipedia_url = JsonHelper.getFieldSafely(json, CatInfoField.wikipedia_url)
 
         val fieldImage =
-            JsonHandler.getJsonObjFromString(JsonHandler.getFieldSafely(json, CatInfoField.image))
-        url = JsonHandler.getFieldSafely(fieldImage, CatInfoField.url)
-        width = JsonHandler.getFieldSafely(fieldImage, CatInfoField.width).toInt()
-        height = JsonHandler.getFieldSafely(fieldImage, CatInfoField.height).toInt()
+            JsonHelper.getJsonObjFromString(JsonHelper.getFieldSafely(json, CatInfoField.image))
+        url = JsonHelper.getFieldSafely(fieldImage, CatInfoField.url)
+        width = JsonHelper.getFieldSafely(fieldImage, CatInfoField.width).toInt()
+        height = JsonHelper.getFieldSafely(fieldImage, CatInfoField.height).toInt()
     }
 }
 
-class CatInfoField() {
+class CatInfoField {
     companion object {
         val description = "description"
         val name = "name"

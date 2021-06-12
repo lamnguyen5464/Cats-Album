@@ -1,7 +1,5 @@
 package com.example.listcats.adapters
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -11,52 +9,55 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.example.listcats.R
-import com.example.listcats.activities.ListCatsActivity
-import com.example.listcats.models.CatInfo
+import com.example.listcats.viewmodels.ListCatViewModel
 import com.squareup.picasso.Picasso
 
-class CatInfoAdapter(context: Context, catInfoData: ArrayList<CatInfo>) :
+class CatInfoAdapter(
+    context: Context,
+    listCatViewModel: ListCatViewModel
+) :
     BaseAdapter() {
     var context: Context? = null
     var layoutInflater: LayoutInflater? = null
-    var catInfoData: ArrayList<CatInfo>? = null
+    var listInfoViewModel: ListCatViewModel? = null
 
     init {
         this.context = context
         this.layoutInflater = LayoutInflater.from(context)
-        this.catInfoData = catInfoData
+        this.listInfoViewModel = listCatViewModel
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-//        if (convertView != null) {
+//        if (convertView != null){
 //            Log.d("@@", convertView.findViewById<TextView>(R.id.txt_name).text.toString())
-//            return convertView
 //        }
+        val currentList = listInfoViewModel?.catInfoRepo?.currentListCatInfo
 
-        Log.d("@@",catInfoData?.get(position)?.url +"")
+        if (position >= currentList?.size?.minus(1) ?: 0) {
+            listInfoViewModel?.appendMoreItems()
+        }
 
-        val itemView = layoutInflater?.inflate(
-            R.layout.item_cat_info, null
-        )
+        val catInfo = currentList?.get(position)
+
+        val itemView = layoutInflater?.inflate(R.layout.item_cat_info, null)
         itemView?.findViewById<TextView>(R.id.txt_name)?.text =
-            "Name: " + catInfoData?.get(position)?.name
+            "Name: " + catInfo?.name
         itemView?.findViewById<TextView>(R.id.txt_desc)?.text =
-            "Description: " + catInfoData?.get(position)?.description
+            "Description: " + catInfo?.description
 
-        Picasso.get().load(catInfoData?.get(position)?.url).into(
+        Picasso.get().load(catInfo?.url).into(
             itemView?.findViewById<ImageButton>(R.id.img_cat)
         )
 
         itemView?.findViewById<ImageButton>(R.id.img_cat)?.setOnClickListener {
-            context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(catInfoData?.get(position)?.wikipedia_url)))
+            context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(catInfo?.wikipedia_url)))
         }
-
 
         return itemView
     }
 
-    override fun getItem(position: Int): Any {
-        TODO("Not yet implemented")
+    override fun getItem(position: Int): Any? {
+        return null
     }
 
     override fun getItemId(position: Int): Long {
@@ -64,7 +65,7 @@ class CatInfoAdapter(context: Context, catInfoData: ArrayList<CatInfo>) :
     }
 
     override fun getCount(): Int {
-        return catInfoData?.size ?: 0
+        return listInfoViewModel?.catInfoRepo?.currentListCatInfo?.size ?: 0
     }
 
 }
