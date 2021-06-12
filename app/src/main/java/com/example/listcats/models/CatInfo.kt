@@ -1,5 +1,4 @@
 package com.example.listcats.models
-import android.util.Log
 import com.example.listcats.helpers.JsonHandler
 import org.json.JSONObject
 
@@ -16,8 +15,6 @@ class CatInfo() {
         description = JsonHandler.getFieldSafely(json, CatInfoField.description)
         name = JsonHandler.getFieldSafely(json, CatInfoField.name)
         wikipedia_url = JsonHandler.getFieldSafely(json, CatInfoField.wikipedia_url)
-
-        Log.d("@@", JsonHandler.getFieldSafely(json, CatInfoField.name))
 
         val fieldImage =
             JsonHandler.getJsonObjFromString(JsonHandler.getFieldSafely(json, CatInfoField.image))
