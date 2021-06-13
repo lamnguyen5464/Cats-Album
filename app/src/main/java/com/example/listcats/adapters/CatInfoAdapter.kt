@@ -50,9 +50,10 @@ class CatInfoAdapter(
         itemView?.findViewById<TextView>(R.id.txt_desc)?.text =
             "Description: " + catInfo?.description
 
-        Picasso.get().load(catInfo?.url).into(
+        Picasso.get().load(catInfo?.url).placeholder(R.drawable.ic_download).into(
             itemView?.findViewById<ImageButton>(R.id.img_cat)
         )
+        Log.d("@@@", position.toString() + " " + catInfo?.name)
 
         itemView?.findViewById<ImageButton>(R.id.img_cat)?.setOnClickListener {
             context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(catInfo?.wikipedia_url)))
