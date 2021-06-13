@@ -2,14 +2,19 @@ package com.example.listcats.activities
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GestureDetectorCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.example.listcats.R
 import com.example.listcats.adapters.CatInfoAdapter
-import com.example.listcats.helpers.JsonHelper
 import com.example.listcats.viewmodels.ListCatViewModel
+
 
 class ListCatsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +22,14 @@ class ListCatsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_list_cats)
         this.supportActionBar?.title = "Cat album"
 
+        //set up recycleView
+        val listRecyclerView = findViewById<RecyclerView>(R.id.listCatInfo)
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        layoutManager.scrollToPosition(0)
+        listRecyclerView.setLayoutManager(layoutManager);
+
+        //set up viewModel
         val listCatViewModel = ViewModelProvider(this).get(ListCatViewModel::class.java)
         listCatViewModel.setContext(this)
 
@@ -26,7 +39,7 @@ class ListCatsActivity : AppCompatActivity() {
             Log.d("@@@ init", it.toString())
 
             listCatViewModel.updateRepo(it)
-            if (it == 5) {
+            if (listInfoAdapter == null) {
                 //init
                 listInfoAdapter =
                     listCatViewModel.catInfoRepo?.currentListCatInfo?.let { it1 ->
@@ -35,9 +48,11 @@ class ListCatsActivity : AppCompatActivity() {
                             listCatViewModel
                         )
                     }
-                findViewById<ListView>(R.id.listCatInfo).adapter = listInfoAdapter
+                listRecyclerView.adapter = listInfoAdapter
             } else {
-                listInfoAdapter?.notifyDataSetChanged()
+                listRecyclerView.post(Runnable {
+                    listInfoAdapter?.notifyDataSetChanged()
+                })
             }
 
         })
